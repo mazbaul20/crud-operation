@@ -35,15 +35,37 @@
             <td>{{ $employee->phone }}</td>
             <td class="d-flex">
                 <a href="{{ route('employee.edit',$employee->id) }}" class="edit"><i class="material-icons"  title="Edit">&#xE254;</i></a>
-                <form action="{{ route('employee.destroy',$employee->id) }}" method="post" id="deleteForm">
+
+                <form action="{{ route('employee.destroy',$employee->id) }}" method="post" id="deleteForm{{ $employee->id }}">
                     @csrf
                     @method('DELETE')
-                    <a href="#" class="delete" data-bs-toggle="modal" data-bs-target="#deleteEmployeeModal">
+                    <a href="#" class="delete" data-bs-toggle="modal" data-bs-target="#deleteEmployeeModal{{$employee->id}}">
                         <i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i>
                     </a>
                 </form>
             </td>
         </tr>
+
+        <!-- Delete Modal HTML -->
+        <div class="modal fade" id="deleteEmployeeModal{{$employee->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Delete Employee</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h3 class=" mt-3 text-warning">Delete !</h3>
+                        <p class="mb-3">Once delete, you can't get it back.</p>
+                        <input class="" hidden id="deleteID"/>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="delete-modal-close" class="btn shadow-sm btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" onclick="confirmDelete({{$employee->id}})"  class="btn shadow-sm btn-danger" >Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     @endforeach
                     </tbody>
                 </table>
@@ -52,26 +74,7 @@
     </div>
 </div>
 
-<!-- Delete Modal HTML -->
-<div class="modal fade" id="deleteEmployeeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Delete Employee</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <h3 class=" mt-3 text-warning">Delete !</h3>
-                <p class="mb-3">Once delete, you can't get it back.</p>
-                <input class="" hidden id="deleteID"/>
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="delete-modal-close" class="btn shadow-sm btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button onclick="itemDelete()" type="button" id="confirmDelete" class="btn shadow-sm btn-danger" >Delete</button>
-            </div>
-        </div>
-    </div>
-</div>
+
 
 <script>
     let tableData = $('#tableData');
@@ -82,12 +85,9 @@
 </script>
 
 <script>
-    document.getElementById('confirmDelete').addEventListener('click', function () {
-        document.getElementById('deleteForm').submit();
-    });
+    function confirmDelete(employeeId) {
+        document.getElementById('deleteForm' + employeeId).submit();
+    }
 
-    // $('#confirmDelete').on('click', function () {
-    //     $('#deleteForm').submit();
-    // });
 </script>
 @endsection
